@@ -1,12 +1,12 @@
 data_name="ecom"
 pool_type="cls"
-gpu='0,1'
+gpu='0'
 bert_model="bert-base-chinese"
 output_dir="output_model/"$data_name"_model/"$bert_model"_"$pool_type""
 
 mkdir -p $output_dir
 
-num_gpu=2
+num_gpu=1
 batch_size=32
 
 train_data="../data/"$data_name"/train/"
