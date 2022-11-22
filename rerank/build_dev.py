@@ -67,7 +67,7 @@ class rankerDevBuild(object):
                 qid, pid, score = seg
                 recall_dict[qid].append([pid, score])
  
-        for qid, recall_list in recall_dict.items():
+        for qid, recall_list in tqdm(recall_dict.items(), total=len(recall_dict)):
             query = self.query_dict[qid]
             golden_pid = self.qrel_dict[qid]
             encoded_query = self.tokenizer.encode(query, add_special_tokens=False, max_length=self.truncate, truncation=True)
