@@ -7,6 +7,8 @@ from reranker.data import GroupedTrainDataset, PredictionDataset, GroupCollator
 from reranker.arguments import ModelArguments, DataArguments, \
     RerankerTrainingArguments as TrainingArguments
 
+from dataclasses import dataclass, field
+
 from transformers import AutoConfig, AutoTokenizer
 from transformers import (
     HfArgumentParser,
@@ -14,7 +16,6 @@ from transformers import (
 )
 
 logger = logging.getLogger(__name__)
-
 
 def main():
     parser = HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
