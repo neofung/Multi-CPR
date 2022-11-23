@@ -2,8 +2,11 @@ channels:
   - defaults
 dependencies:
   - pip=20.0.2
-  - python=3.6.10
-  - tensorflow-gpu=1.14.0
+  - python=3.7
+  - tensorflow=2.3.0 # tensorflow 和 CUDA 兼容表 https://www.tensorflow.org/install/source#tested_build_configurations
+  - pytorch::pytorch=1.11.0
+  - cudatoolkit=10.2
+  - cudnn=7
   - pip:
     - aiohttp==3.8.3
     - aiosignal==1.2.0
@@ -51,7 +54,7 @@ dependencies:
     - jupyter-nbextensions-configurator==0.6.1
     - jupyterlab-pygments==0.1.2
     - jupyterlab-widgets==1.1.1
-    - keras==2.2.4
+    - keras==2.2.4 # kera 和 TensorFlow 版本兼容表 https://github.com/keras-team/keras
     - lxml==4.9.1
     - markupsafe==2.0.1
     - mistune==0.8.4
@@ -96,7 +99,6 @@ dependencies:
     - testpath==0.6.0
     - tokenizers==0.12.1
     - toml==0.10.2
-    - torch==1.10.2
     - tornado==6.1
     - tqdm==4.64.1
     - traitlets==4.3.3
