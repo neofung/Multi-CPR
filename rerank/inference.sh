@@ -1,4 +1,4 @@
-DEV_DATA_PATH=dev/ecom
+DEV_DATA_PATH=test/ecom
 MODEL_PATH=fintune_models/ecom_roberta_base
 RESULT_PATH=result/ecom_bert_base_rank_res
 
@@ -11,7 +11,7 @@ CUDA_VISIBLE_DEVICES=0 python run_marco.py \
   --fp16 \
   --per_device_eval_batch_size 64 \
   --dataloader_num_workers 8 \
-  --pred_path ${DEV_DATA_PATH}/dev.top1000.json  \
-  --pred_id_file  ${DEV_DATA_PATH}/dev.top1000.label.txt \
+  --pred_path ${DEV_DATA_PATH}/test.top1000.json  \
+  --pred_id_file  ${DEV_DATA_PATH}/test.top1000.label.txt \
   --run_id baseline \
   --rank_score_path ${RESULT_PATH}

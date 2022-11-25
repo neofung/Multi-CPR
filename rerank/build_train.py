@@ -26,7 +26,10 @@ class rankerTrainBuild(object):
             for line in f:
                 line = line.strip()
                 seg = line.split('\t')
-                qid, pid = seg[0], seg[2]
+                if len(seg) == 4:
+                    qid, pid = seg[0], seg[2]
+                else:
+                    qid, pid = seg[0], seg[1]
                 qrel[qid] = pid
         print ("Finish reading qrel dict")
         return qrel
@@ -37,7 +40,10 @@ class rankerTrainBuild(object):
             for line in f:
                 line = line.strip()
                 seg = line.split('\t')
-                qid, query = seg
+                if len(seg) !=2:
+                    qid, qry = seg[0], '\t'.join(seg[1:])
+                else:
+                    qid, query = seg
                 query_dict[qid] = query
         print ("Finish reading query dict")
         return query_dict

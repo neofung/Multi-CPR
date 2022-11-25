@@ -14,8 +14,10 @@ class evaluation():
         with open(qrel_path) as f:
             for line in f:
                 line = line.strip().split('\t')
-                qid = line[0]
-                pid = line[2]
+                if len(line) == 4:
+                    qid, pid = line[0], line[2]
+                else:
+                    qid, pid = line[0], line[1]
                 if qid not in qrels:
                     qrels[qid] = []
                 qrels[qid].append(pid)

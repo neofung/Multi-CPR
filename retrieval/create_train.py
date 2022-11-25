@@ -16,7 +16,11 @@ def read_queries(queries):
     qmap = {}
     with open(queries) as f:
         for l in f:
-            qid, qry = l.strip().split('\t')
+            items = l.strip().split('\t')
+            if len(items)!=2:
+                qid, qry = items[0], '\t'.join(items[1:])
+            else:
+                qid, qry = items
             qmap[qid] = qry
     return qmap
 
@@ -37,7 +41,10 @@ def encode_one(line):
     line = line.strip().split("\t")  # query_id, _, doc_id, _ 
     if not isinstance(line, list) or len(line) < 2:
         return None
-    query_id, doc_id = line[0], line[2]
+    if len(line) == 4:
+        query_id, doc_id = line[0], line[2]
+    else:
+        query_id, doc_id = line[0], line[1]
     query = queries[query_id]
     doc = collections[doc_id] 
     spans = [query, doc]

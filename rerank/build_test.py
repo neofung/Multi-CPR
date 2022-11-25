@@ -8,11 +8,11 @@ import random
 from tqdm import tqdm
 import csv
 
-class rankerDevBuild(object):
+class rankerTestBuild(object):
     def __init__(self, args):
         self.args = args
         self.tokenizer_name = args.tokenizer_name
-        self.qrel_dict = self.read_qrel(args.qrel_file)
+#         self.qrel_dict = self.read_qrel(args.qrel_file)
         self.query_dict = self.read_query(args.query_file)
         self.corpus_dict = self.read_corpus(args.corpus_file)
         self.retrieval_file = self.args.retrieval_file
@@ -22,19 +22,16 @@ class rankerDevBuild(object):
         self.topk = self.args.topk
         self.tokenizer = AutoTokenizer.from_pretrained(self.tokenizer_name, use_fast=True)    
     
-    def read_qrel(self, qrel_file):
-        qrel = {}
-        with open(qrel_file, 'r', encoding='utf8') as f:
-            for line in f:
-                line = line.strip()
-                seg = line.split('\t')
-                if len(seg) == 4:
-                    qid, pid = seg[0], seg[2]
-                else:
-                    qid, pid = seg[0], seg[1]
-                qrel[qid] = pid
-        print ("Finish reading qrel dict")
-        return qrel
+#     def read_qrel(self, qrel_file):
+#         qrel = {}
+#         with open(qrel_file, 'r', encoding='utf8') as f:
+#             for line in f:
+#                 line = line.strip()
+#                 seg = line.split('\t')
+#                 qid, pid = seg[0], seg[2]
+#                 qrel[qid] = pid
+#         print ("Finish reading qrel dict")
+#         return qrel
 
     def read_query(self, query_file):
         query_dict = {}
@@ -62,7 +59,7 @@ class rankerDevBuild(object):
         print ("Finish reading corpus dict")
         return corpus_dict
 
-    def trans_to_ranking_dev(self):
+    def trans_to_ranking_test(self):
         fl = open(self.ranking_file, 'w')
         fd = open(self.label_file, 'w')
         recall_dict = defaultdict(list)
@@ -75,7 +72,7 @@ class rankerDevBuild(object):
  
         for qid, recall_list in tqdm(recall_dict.items(), total=len(recall_dict)):
             query = self.query_dict[qid]
-            golden_pid = self.qrel_dict[qid]
+#             golden_pid = self.qrel_dict[qid]
             encoded_query = self.tokenizer.encode(query, add_special_tokens=False, max_length=self.truncate, truncation=True)
             for i, item in enumerate(recall_list[0: self.topk]):
                 pid, score = item
@@ -87,11 +84,13 @@ class rankerDevBuild(object):
                     'qry': encoded_query,
                     'psg': encoded_psg
                 }
-                if pid == golden_pid:
-                    label = '1'
-                else:
-                    label = '0'
-                tmp = [qid, 'Q0', pid, str(i+1), score, label]
+#                 if pid == golden_pid:
+#                     label = '1'
+#                 else:
+#                     label = '0'
+                tmp = [qid, 'Q0', pid
+#                        , str(i+1), score, label
+                      ]
                 fd.write(' '.join(tmp).strip() + '\n')
                 fl.write(json.dumps(item_set) + '\n')
 
@@ -102,7 +101,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument('--tokenizer_name', type=str, default="bert-base-chinese", help="bert tokenizer name")
     parser.add_argument('--truncate', type=int, default=256, help="bert tokenizer max sequence length")
-    parser.add_argument('--qrel_file', type=str, default="../data/video/qrels.dev.tsv", help="qrels train file")
+#     parser.add_argument('--qrel_file', type=str, default="../data/video/qrels.dev.tsv", help="qrels train file")
     parser.add_argument('--query_file', type=str, default="../data/video/dev.query.txt", help="query train file")
     parser.add_argument('--corpus_file', type=str, default="../data/video/corpus.tsv", help="corpus file")
     parser.add_argument('--topk', type=int, default=1000, help="select topk result")
@@ -110,5 +109,7 @@ if __name__ == "__main__":
     parser.add_argument('--ranking_file', type=str, default="dev/video/dev.top1000.json", help="ranking train save file")
     parser.add_argument('--label_file', type=str, default="dev/video/dev.top1000.label.txt", help="ranking train save file")
     args = parser.parse_args()
-    rankerDevBuild = rankerDevBuild(args)
-    rankerDevBuild.trans_to_ranking_dev()
+    print("----------------------------args: ")
+    print(args)
+    rankerTestBuild = rankerTestBuild(args)
+    rankerTestBuild.trans_to_ranking_test()
