@@ -41,7 +41,7 @@ class rankerTrainBuild(object):
                 line = line.strip()
                 seg = line.split('\t')
                 if len(seg) !=2:
-                    qid, qry = seg[0], '\t'.join(seg[1:])
+                    qid, query = seg[0], '\t'.join(seg[1:])
                 else:
                     qid, query = seg
                 query_dict[qid] = query
@@ -64,14 +64,19 @@ class rankerTrainBuild(object):
         fl = open(self.ranking_file, 'w')
         recall_dict = defaultdict(list)
         with open(args.retrieval_file, 'r') as f:
-            for line in tqdm(f.readlines()):
+            for line in tqdm(f):
                 line = line.strip()
                 seg = line.split('\t')
                 qid, pid, score = seg
                 recall_dict[qid].append(pid)
                 #docs = docs.split(sep_b)
                 #scores = scores.split(sep_b)
-        for qid, recall_list in recall_dict.items():
+
+#         keys = random.sample(list(recall_dict), 1024)
+#         values = [recall_dict[k] for k in keys]
+#         recall_dict = dict(zip(keys, values)) 
+        
+        for qid, recall_list in tqdm(recall_dict.items(), total=len(recall_dict)):
         
             golden_pid = self.qrel_dict[qid]
             pos_paassage = self.corpus_dict[golden_pid]
@@ -123,5 +128,6 @@ if __name__ == "__main__":
     parser.add_argument('--retrieval_file', type=str, default="../retrieval/output/video/bert-base-chinese_cls.train.l2.out", help="train query retrieval result")
     parser.add_argument('--ranking_file', type=str, default="train/video/train.group.json", help="ranking train save file")
     args = parser.parse_args()
+    print("args: ", args)
     rankerTrainBuild = rankerTrainBuild(args)
     rankerTrainBuild.trans_to_ranking_train()

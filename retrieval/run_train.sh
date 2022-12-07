@@ -1,4 +1,4 @@
-data_name="ecom"
+data_name="medical"
 pool_type="avg"
 gpu='0'
 bert_model="hfl/chinese-roberta-wwm-ext"

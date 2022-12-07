@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[14]:
+# In[2]:
 
 
 import logging
@@ -18,10 +18,10 @@ finally:
 logger = logging.getLogger(__name__)
 
 
-# In[15]:
+# In[3]:
 
 
-for file_path in ["result/ecom_bert_base_rank_res"]:
+for file_path in ["result/ecom_bert_base_rank_res", "result/medical_bert_base_rank_res"]:
     scenario = file_path.split("/")[-1].split("_")[0]
     results = OrderedDict()
     with open(file_path) as fin:

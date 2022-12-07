@@ -40,7 +40,7 @@ class rankerTestBuild(object):
                 line = line.strip()
                 seg = line.split('\t')
                 if len(seg) !=2:
-                    qid, qry = seg[0], '\t'.join(seg[1:])
+                    qid, query = seg[0], '\t'.join(seg[1:])
                 else:
                     qid, query = seg
                 query_dict[qid] = query
@@ -64,12 +64,16 @@ class rankerTestBuild(object):
         fd = open(self.label_file, 'w')
         recall_dict = defaultdict(list)
         with open(args.retrieval_file, 'r') as f:
-            for line in tqdm(f.readlines()):
+            for line in tqdm(f):
                 line = line.strip()
                 seg = line.split('\t')
                 qid, pid, score = seg
                 recall_dict[qid].append([pid, score])
- 
+
+#         keys = random.sample(list(recall_dict), min(128, len(recall_dict)))
+#         values = [recall_dict[k] for k in keys]
+#         recall_dict = dict(zip(keys, values))                  
+        
         for qid, recall_list in tqdm(recall_dict.items(), total=len(recall_dict)):
             query = self.query_dict[qid]
 #             golden_pid = self.qrel_dict[qid]

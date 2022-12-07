@@ -43,7 +43,7 @@ class rankerDevBuild(object):
                 line = line.strip()
                 seg = line.split('\t')
                 if len(seg) !=2:
-                    qid, qry = seg[0], '\t'.join(seg[1:])
+                    qid, query = seg[0], '\t'.join(seg[1:])
                 else:
                     qid, query = seg
                 query_dict[qid] = query
@@ -67,16 +67,21 @@ class rankerDevBuild(object):
         fd = open(self.label_file, 'w')
         recall_dict = defaultdict(list)
         with open(args.retrieval_file, 'r') as f:
-            for line in tqdm(f.readlines()):
+            for line in tqdm(f):
                 line = line.strip()
                 seg = line.split('\t')
                 qid, pid, score = seg
                 recall_dict[qid].append([pid, score])
+
+#         keys = random.sample(list(recall_dict), min(128, len(recall_dict)))
+#         values = [recall_dict[k] for k in keys]
+#         recall_dict = dict(zip(keys, values))              
  
         for qid, recall_list in tqdm(recall_dict.items(), total=len(recall_dict)):
             query = self.query_dict[qid]
             golden_pid = self.qrel_dict[qid]
             encoded_query = self.tokenizer.encode(query, add_special_tokens=False, max_length=self.truncate, truncation=True)
+#             recall_list.insert(0, [golden_pid, "0.0"])
             for i, item in enumerate(recall_list[0: self.topk]):
                 pid, score = item
                 psg_content = self.corpus_dict[pid]
@@ -110,5 +115,6 @@ if __name__ == "__main__":
     parser.add_argument('--ranking_file', type=str, default="dev/video/dev.top1000.json", help="ranking train save file")
     parser.add_argument('--label_file', type=str, default="dev/video/dev.top1000.label.txt", help="ranking train save file")
     args = parser.parse_args()
+    print("args: ", args)
     rankerDevBuild = rankerDevBuild(args)
     rankerDevBuild.trans_to_ranking_dev()

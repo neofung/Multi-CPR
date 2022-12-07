@@ -1,13 +1,16 @@
-DEV_DATA_PATH=test/ecom
-MODEL_PATH=fintune_models/ecom_roberta_base
-RESULT_PATH=result/ecom_bert_base_rank_res
+data_name="medical"
+data_name_prefix="med"
+
+DEV_DATA_PATH=test/${data_name}
+MODEL_PATH=fintune_models/${data_name}_roberta_base
+RESULT_PATH=result/${data_name}_bert_base_rank_res
 
 CUDA_VISIBLE_DEVICES=0 python run_marco.py \
   --output_dir ${MODEL_PATH} \
   --model_name_or_path ${MODEL_PATH} \
   --tokenizer_name hfl/chinese-roberta-wwm-ext \
   --do_predict \
-  --max_len 256 \
+  --max_len 260 \
   --fp16 \
   --per_device_eval_batch_size 64 \
   --dataloader_num_workers 8 \
